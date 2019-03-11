@@ -13,6 +13,8 @@ import android.view.WindowManager
 
 class MainActivity : AppCompatActivity(), SensorEventListener {
 
+    private lateinit var tiltView: TiltView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         // 가로모드
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
@@ -20,7 +22,9 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+
+        tiltView = TiltView(this)
+        setContentView(tiltView)
     }
 
     private val sensorManager by lazy {
@@ -41,6 +45,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     override fun onSensorChanged(event: SensorEvent?) {
         event?.let {    // let는 null이 아니면 람다를 수행하고 null이면 아무 일도 일어나지 않음
             Log.d("MainActivity", "onSensorChanged: x: ${event.values[0]}, y: ${event.values[1]}, z: ${event.values[2]}")
+
+            tiltView.onSensorEvent(event)
         }
     }
 
@@ -48,4 +54,10 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         super.onPause()
         sensorManager.unregisterListener(this)
     }
+
+
+
+
+
+
 }
